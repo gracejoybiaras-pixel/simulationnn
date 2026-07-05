@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MATH QUIZ BATTLE</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(
+135deg,
+#0f172a,
+#4c1d95,
+#06b6d4
+);
+background-size:400% 400%;
+animation:bgMove 10s ease infinite;
+overflow:hidden;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.container{
+width:430px;
+max-width:95%;
+}
+
+.glass{
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(18px);
+padding:25px;
+border-radius:25px;
+border:1px solid rgba(255,255,255,.2);
+color:white;
+box-shadow:
+0 0 20px rgba(0,255,255,.2),
+0 0 40px rgba(138,92,255,.2);
+}
+
+.hidden{
+display:none;
+}
+
+.title{
+text-align:center;
+margin-bottom:20px;
+}
+
+.title h1{
+font-size:34px;
+font-weight:700;
+}
+
+.title p{
+opacity:.8;
+font-size:14px;
+}
+
+input,
+select{
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+margin-top:10px;
+outline:none;
+}
+
+.start-btn,
+.answer-btn,
+.power-btn,
+.play-btn{
+border:none;
+cursor:pointer;
+font-weight:600;
+}
+
+.start-btn,
+.play-btn{
+width:100%;
+padding:14px;
+margin-top:15px;
+border-radius:14px;
+color:white;
+background:linear-gradient(
+135deg,
+#00f5ff,
+#8b5cf6
+);
+}
+
+.top-bar{
+display:flex;
+justify-content:space-between;
+margin-bottom:15px;
+}
+
+.badge{
+background:rgba(255,255,255,.15);
+padding:8px 12px;
+border-radius:20px;
+font-size:13px;
+}
+
+.timer{
+height:10px;
+background:rgba(255,255,255,.15);
+border-radius:10px;
+overflow:hidden;
+}
+
+.timer-bar{
+height:100%;
+width:100%;
+background:linear-gradient(
+90deg,
+#00ffcc,
+#00f5ff
+);
+}
+
+.time{
+text-align:right;
+font-size:13px;
+margin-top:5px;
+}
+
+.question-box{
+margin-top:20px;
+padding:20px;
+border-radius:18px;
+background:rgba(255,255,255,.12);
+text-align:center;
+}
+
+#question{
+font-size:28px;
+font-weight:700;
+}
+
+.answers{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:15px;
+}
+
+.answer-btn{
+padding:15px;
+border-radius:14px;
+font-size:18px;
+color:white;
+background:linear-gradient(
+135deg,
+#06b6d4,
+#8b5cf6
+);
+transition:.3s;
+}
+
+.answer-btn:hover{
+transform:scale(1.05);
+}
+
+.correct{
+background:#22c55e!important;
+}
+
+.wrong{
+background:#ef4444!important;
+}
+
+.powerups{
+display:flex;
+gap:10px;
+margin-top:15px;
+}
+
+.power-btn{
+flex:1;
+padding:12px;
+border-radius:12px;
+color:white;
+}
+
+.double{
+background:#f97316;
+}
+
+.skip{
+background:#ec4899;
+}
+
+.sound{
+background:#8b5cf6;
+}
+
+.scoreboard{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:15px;
+}
+
+.card{
+background:rgba(255,255,255,.12);
+padding:12px;
+border-radius:14px;
+text-align:center;
+}
+
+.combo{
+margin-top:12px;
+text-align:center;
+font-weight:700;
+color:#fde047;
+}
+
+.boss{
+animation:bossPulse .8s infinite;
+box-shadow:
+0 0 20px gold,
+0 0 40px orange;
+}
+
+@keyframes bossPulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.05);}
+100%{transform:scale(1);}
+}
+
+.summary{
+text-align:center;
+}
+
+.summary-card{
+background:rgba(255,255,255,.12);
+padding:15px;
+border-radius:15px;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="startScreen" class="glass">
+
+<div class="title">
+<h1>⚔️ MATH QUIZ BATTLE</h1>
+<p>Challenge • Compete • Conquer</p>
+</div>
+
+<input
+id="playerName"
+placeholder="Enter your name">
+
+<select id="difficulty">
+<option value="1">Easy</option>
+<option value="2">Medium</option>
+<option value="3">Hard</option>
+</select>
+
+<button
+class="start-btn"
+onclick="startGame()">
+START BATTLE
+</button>
+
+</div>
+ 
+<!-- GAME SCREEN -->
+
+<div
+id="gameScreen"
+class="glass hidden">
+
+<div class="top-bar">
+
+<div
+id="levelBadge"
+class="badge">
+Level 1
+</div>
+
+<div
+id="playerBadge"
+class="badge">
+Player
+</div>
+
+</div>
+
+<div class="timer">
+<div
+id="timerBar"
+class="timer-bar">
+</div>
+</div>
+
+<div
+id="timeText"
+class="time">
+10s
+</div>
+
+<div
+id="questionBox"
+class="question-box">
+
+<div id="question">
+Loading...
+</div>
+
+</div>
+
+<div
+id="answers"
+class="answers">
+</div>
+
+<div class="powerups">
+
+<button
+class="power-btn double"
+onclick="useDouble()">
+💥 Double
+</button>
+
+<button
+class="power-btn skip"
+onclick="useSkip()">
+⏭ Skip
+</button>
+
+<button
+class="power-btn sound"
+onclick="toggleSound()">
+🔊
+</button>
+
+</div>
+
+<div class="scoreboard">
+
+<div class="card">
+<h3>Player</h3>
+<p id="playerScore">0</p>
+</div>
+
+<div class="card">
+<h3>AI</h3>
+<p id="aiScore">0</p>
+</div>
+
+</div>
+
+<div
+id="comboText"
+class="combo">
+🔥 Combo x0
+</div>
+
+</div>
+
+<!-- SUMMARY SCREEN -->
+
+<div
+id="summaryScreen"
+class="glass hidden summary">
+
+<h2>
+🏆 GAME SUMMARY
+</h2>
+
+<div
+id="summaryData"
+class="summary-card">
+</div>
+
+<button
+class="play-btn"
+onclick="location.reload()">
+PLAY AGAIN
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+/* =========================
+   VARIABLES
+========================= */
+
+let playerName = "Player";
+
+let level = 1;
+
+let playerScore = 0;
+let aiScore = 0;
+
+let combo = 0;
+let highestCombo = 0;
+
+let correctAnswers = 0;
+let totalAnswers = 0;
+
+let currentAnswer = 0;
+
+let questionCount = 0;
+let maxQuestions = 10;
+
+let timer;
+let timeLeft = 10;
+
+let doubleMode = false;
+
+let soundEnabled = true;
+
+const passScore = {
+1:6,
+2:7,
+3:8
+};
+
+/* =========================
+   AUDIO
+========================= */
+
+function tone(freq,time){
+
+if(!soundEnabled) return;
+
+const audio =
+new(
+window.AudioContext ||
+window.webkitAudioContext
+)();
+
+const osc =
+audio.createOscillator();
+
+const gain =
+audio.createGain();
+
+osc.type = "sine";
+
+osc.frequency.value =
+freq;
+
+osc.connect(gain);
+
+gain.connect(
+audio.destination
+);
+
+osc.start();
+
+gain.gain.setValueAtTime(
+0.2,
+audio.currentTime
+);
+
+gain.gain.exponentialRampToValueAtTime(
+0.001,
+audio.currentTime +
+time/1000
+);
+
+osc.stop(
+audio.currentTime +
+time/1000
+);
+
+}
+
+function soundCorrect(){
+
+tone(700,200);
+
+}
+
+function soundWrong(){
+
+tone(250,300);
+
+}
+
+function soundLevel(){
+
+tone(600,150);
+
+setTimeout(()=>{
+tone(900,150);
+},150);
+
+}
+
+/* =========================
+   START GAME
+========================= */
+
+function startGame(){
+
+playerName =
+document
+.getElementById(
+"playerName"
+)
+.value
+.trim();
+
+if(playerName === ""){
+playerName = "Player";
+}
+
+level =
+Number(
+document
+.getElementById(
+"difficulty"
+)
+.value
+);
+
+document
+.getElementById(
+"playerBadge"
+).innerText = playerName;
+
+document
+.getElementById(
+"startScreen"
+)
+.classList
+.add("hidden");
+
+document
+.getElementById(
+"gameScreen"
+)
+.classList
+.remove("hidden");
+
+updateLevel();
+
+displayQuestion();
+
+}
+ 
+/* =========================
+   LEVEL UI
+========================= */
+
+function updateLevel(){
+
+document
+.getElementById(
+"levelBadge"
+).innerText =
+"Level " + level;
+
+}
+
+/* =========================
+   RANDOM
+========================= */
+
+function rand(min,max){
+
+return Math.floor(
+Math.random() *
+(max-min+1)
+)+min;
+
+}
+
+function shuffle(arr){
+
+for(
+let i=arr.length-1;
+i>0;
+i--
+){
+
+let j =
+Math.floor(
+Math.random()*(i+1)
+);
+
+[arr[i],arr[j]] =
+[arr[j],arr[i]];
+
+}
+
+return arr;
+
+}
+
+/* =========================
+   QUESTIONS
+========================= */
+
+function generateQuestion(){
+
+let a,b,op;
+let answer;
+
+const bossRound =
+questionCount > 0 &&
+questionCount % 5 === 0;
+
+if(level === 1){
+
+a = rand(1,10);
+b = rand(1,10);
+
+op =
+["+","-"]
+[rand(0,1)];
+
+}
+else if(level === 2){
+
+a = rand(1,20);
+b = rand(1,20);
+
+op =
+["+","-","×"]
+[rand(0,2)];
+
+}
+else{
+
+a = rand(10,50);
+b = rand(10,50);
+
+op =
+["+","-","×"]
+[rand(0,2)];
+
+}
+
+if(op === "+"){
+answer = a+b;
+}
+else if(op === "-"){
+answer = a-b;
+}
+else{
+answer = a*b;
+}
+
+if(bossRound){
+
+let c =
+rand(2,15);
+
+answer += c;
+
+currentAnswer =
+answer;
+
+document
+.getElementById(
+"questionBox"
+)
+.classList
+.add("boss");
+
+return `
+🔥 BOSS ROUND 🔥
+<br><br>
+(${a} ${op} ${b}) + ${c}
+`;
+
+}
+
+document
+.getElementById(
+"questionBox"
+)
+.classList
+.remove("boss");
+
+currentAnswer =
+answer;
+
+return `${a} ${op} ${b}`;
+
+}
+
+/* =========================
+   DISPLAY QUESTION
+========================= */
+
+function displayQuestion(){
+
+clearInterval(timer);
+
+timeLeft = 10;
+
+document
+.getElementById(
+"timeText"
+)
+.innerText =
+"10s";
+
+document
+.getElementById(
+"timerBar"
+)
+.style.width =
+"100%";
+
+document
+.getElementById(
+"timerBar"
+)
+.style.background =
+"linear-gradient(90deg,#00ffcc,#00f5ff)";
+
+document
+.getElementById(
+"question"
+)
+.innerHTML =
+generateQuestion();
+
+createAnswers();
+
+updateStats();
+
+startTimer();
+
+}
+
+/* =========================
+   ANSWERS
+========================= */
+
+function createAnswers(){
+
+const answersDiv =
+document
+.getElementById(
+"answers"
+);
+
+answersDiv.innerHTML =
+"";
+
+let choices =
+[currentAnswer];
+
+while(
+choices.length < 4
+){
+
+let fake =
+currentAnswer +
+rand(-15,15);
+
+if(
+fake !== currentAnswer &&
+!choices.includes(fake)
+){
+choices.push(fake);
+}
+
+}
+
+shuffle(choices);
+
+choices.forEach(choice=>{
+
+const btn =
+document.createElement(
+"button"
+);
+
+btn.className =
+"answer-btn";
+
+btn.innerText =
+choice;
+
+btn.onclick =
+()=>checkAnswer(
+choice,
+btn
+);
+
+answersDiv.appendChild(
+btn
+);
+
+});
+
+}
+
+/* =========================
+   TIMER
+========================= */
+
+function startTimer(){
+
+timer =
+setInterval(()=>{
+
+timeLeft--;
+
+document
+.getElementById(
+"timeText"
+)
+.innerText =
+timeLeft + "s";
+
+document
+.getElementById(
+"timerBar"
+)
+.style.width =
+(timeLeft*10)+"%";
+
+if(timeLeft <= 5){
+
+document
+.getElementById(
+"timerBar"
+)
+.style.background =
+"#f97316";
+
+}
+
+if(timeLeft <= 3){
+
+document
+.getElementById(
+"timerBar"
+)
+.style.background =
+"#ef4444";
+
+}
+
+if(timeLeft <= 0){
+
+clearInterval(timer);
+
+combo = 0;
+
+totalAnswers++;
+
+aiTurn();
+
+nextQuestion();
+
+}
+
+},1000);
+
+}
+
+/* =========================
+   CHECK ANSWER
+========================= */
+
+function checkAnswer(
+answer,
+button
+){
+
+clearInterval(timer);
+
+totalAnswers++;
+
+let points =
+doubleMode
+? 2
+: 1;
+
+doubleMode = false;
+
+if(
+answer ===
+currentAnswer
+){
+
+button.classList.add(
+"correct"
+);
+
+playerScore +=
+points;
+
+correctAnswers++;
+
+combo++;
+
+if(
+combo >
+highestCombo
+){
+highestCombo =
+combo;
+}
+
+soundCorrect();
+
+}
+else{
+
+button.classList.add(
+"wrong"
+);
+
+combo = 0;
+
+soundWrong();
+
+}
+
+aiTurn();
+
+updateStats();
+
+setTimeout(()=>{
+
+nextQuestion();
+
+},700);
+
+}
+
+/* =========================
+   AI
+========================= */
+
+function aiTurn(){
+
+let chance;
+
+if(level === 1){
+
+chance = 0.40;
+
+}
+else if(level === 2){
+
+chance = 0.65;
+
+}
+else{
+
+chance = 0.85;
+
+}
+
+if(
+Math.random()
+< chance
+){
+
+aiScore++;
+
+}
+
+}
+
+/* =========================
+   STATS
+========================= */
+
+function updateStats(){
+
+document
+.getElementById(
+"playerScore"
+)
+.innerText =
+playerScore;
+
+document
+.getElementById(
+"aiScore"
+)
+.innerText =
+aiScore;
+
+document
+.getElementById(
+"comboText"
+)
+.innerText =
+"🔥 Combo x" +
+combo;
+
+}
+
+/* =========================
+   NEXT QUESTION
+========================= */
+
+function nextQuestion(){
+
+questionCount++;
+
+if(
+questionCount >=
+maxQuestions
+){
+
+checkLevel();
+
+return;
+
+}
+
+displayQuestion();
+
+}
+ 
+/* =========================
+   LEVEL CHECK
+========================= */
+
+function checkLevel(){
+
+if(
+playerScore >=
+passScore[level]
+){
+
+if(level < 3){
+
+soundLevel();
+
+alert(
+"🎉 LEVEL PASSED!\n\nMoving to Level "
++ (level+1)
+);
+
+level++;
+
+questionCount = 0;
+
+playerScore = 0;
+aiScore = 0;
+
+combo = 0;
+
+updateLevel();
+
+displayQuestion();
+
+}
+else{
+
+showSummary(true);
+
+}
+
+}
+else{
+
+showSummary(false);
+
+}
+
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
+function showSummary(win){
+
+clearInterval(timer);
+
+document
+.getElementById(
+"gameScreen"
+)
+.classList
+.add("hidden");
+
+document
+.getElementById(
+"summaryScreen"
+)
+.classList
+.remove("hidden");
+
+const accuracy =
+totalAnswers === 0
+? 0
+: Math.round(
+(correctAnswers /
+totalAnswers) * 100
+);
+
+document
+.getElementById(
+"summaryData"
+)
+.innerHTML = `
+
+<h3>
+${win
+? "🏆 YOU WIN!"
+: "💔 TRY AGAIN"}
+</h3>
+
+<br>
+
+<p>
+<b>Player:</b>
+${playerName}
+</p>
+
+<p>
+<b>Final Level:</b>
+${level}
+</p>
+
+<p>
+<b>Score:</b>
+${correctAnswers}
+</p>
+
+<p>
+<b>Accuracy:</b>
+${accuracy}%
+</p>
+
+<p>
+<b>Highest Combo:</b>
+${highestCombo}
+</p>
+
+`;
+
+}
+
+/* =========================
+   POWER UPS
+========================= */
+
+function useDouble(){
+
+doubleMode = true;
+
+alert(
+"💥 Double Points Activated!"
+);
+
+}
+
+function useSkip(){
+
+clearInterval(timer);
+
+nextQuestion();
+
+}
+
+/* =========================
+   SOUND TOGGLE
+========================= */
+
+function toggleSound(){
+
+soundEnabled =
+!soundEnabled;
+
+const btn =
+document.querySelector(
+".sound"
+);
+
+btn.innerText =
+soundEnabled
+? "🔊"
+: "🔇";
+
+}
+
+/* =========================
+   FIX FOR PART 2
+========================= */
+
+/*
+In Part 2, find this:
+
+document
+.getElementById(
+"playerBadge"
+)
+innerText = playerName;
+
+Replace it with:
+
+document
+.getElementById(
+"playerBadge"
+).innerText = playerName;
+
+The missing dot (.) before
+innerText would cause an error.
+*/
+
+/* =========================
+   OPTIONAL WIN SOUND
+========================= */
+
+function winSound(){
+
+tone(500,150);
+
+setTimeout(()=>{
+tone(700,150);
+},150);
+
+setTimeout(()=>{
+tone(1000,250);
+},300);
+
+}
+
+/* =========================
+   OVERRIDE SUMMARY
+========================= */
+
+const oldSummary =
+showSummary;
+
+showSummary = function(win){
+
+if(win){
+
+winSound();
+
+}
+
+oldSummary(win);
+
+};
+
+</script>
+
+</body>
+</html>
